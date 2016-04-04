@@ -4,17 +4,25 @@ In this tutorial, we suppose that you are using a Linux distribution.
 
 ## Development environment
 
-* OS: Ubuntu 14.04
+* OS: Debian GNU/Linux 8
 * Python 3.4
 
-I haven't tested but I think any Linux distribution with `Python3.4` should work.
 
 
 ## Getting started:
 
+* Install VirtualEnv, Python 3.4 dev. and npm.
+
+        $> sudo apt-get install virtualenv python3-dev npm
+
 * Install MagicWand, this is necessary for image processing in EduPi.
 
         $> sudo apt-get install libmagickwand-dev
+
+* Install Bower and fix path issue
+
+        $> sudo npm install -g bower
+	$> sudo ln -s /usr/bin/nodejs /usr/bin/node
 
 * Prepare a neat directory
 
@@ -26,9 +34,6 @@ I haven't tested but I think any Linux distribution with `Python3.4` should work
         $> virtualenv --python=python3.4 virtualenv
         $> source virtualenv/bin/activate
 
-        You might not have python3.4 installed on your Linux distribution.
-        Check the `how-to.md` document for installing python3.4 on a Debian-like distribution.
-
 * Prepare directories
 
         (virtualenv)$> mkdir static database media
@@ -39,8 +44,6 @@ I haven't tested but I think any Linux distribution with `Python3.4` should work
         (virtualenv)$> cd edupi
 
 * Install required packages
-
-    We assume that you have already `node.js`, `npm`, `bower` installed.
 
         (virtualenv)$> pip install -r requirements.txt
         (virtualenv)$> pip install -r requirements-dev.txt
