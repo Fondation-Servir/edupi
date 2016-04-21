@@ -129,6 +129,7 @@ BOWER_INSTALLED_APPS = (
     'requirejs-text#2.0.14',
     'dropzone#4.0.1',
     'i18next#1.10.2',
+    'google-open-sans'
 )
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "../media/")

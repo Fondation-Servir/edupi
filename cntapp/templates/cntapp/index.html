@@ -3,17 +3,19 @@
 <html lang="{{ LANGUAGE_CODE|default:"en-us" }}">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>{{ title | default:"Edupi" }}</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/dist/css/bootstrap.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'cntapp/final/css/style.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>{{ title | default:"Edupi - ONG Shammesh" }}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/dist/css/bootstrap.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'cntapp/final/css/style.css' %}" />
+    <link type="image/x-icon" rel="icon" href="{% static 'cntapp/custom/images/favicon.ico' %}">
 </head>
 
 <body>
-<div class="container">
+<div class="container vertical-center">
     <div class="row">
         <div class="col-xs-12 loading">
-            Loading EduPi...
+        	<img src="{% static 'cntapp/custom/images/splashscreen-logo.png' %}" />
+			<br />
             <span class="glyphicon glyphicon-repeat glyphicon-refresh-animate"></span>
         </div>
     </div>
