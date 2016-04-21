@@ -8,7 +8,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from wand.image import Image
 from rest_framework import serializers
 
-from .models import Directory, Document
+from .models import Directory, Document, Link
 
 
 logger = logging.getLogger(__name__)
@@ -23,6 +23,10 @@ class DirectorySerializer(serializers.ModelSerializer):
         model = Directory
         fields = ('id', 'url', 'name')
 
+class LinkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Link
+        fields = ('id', 'url', 'name', 'description')
 
 class DocumentSerializer(serializers.ModelSerializer):
     directory_set = DirectorySerializer(many=True, read_only=True)

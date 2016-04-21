@@ -9,6 +9,7 @@ from edupi import settings
 router = DefaultRouter()
 router.register(r'directories', views.DirectoryViewSet)
 router.register(r'documents', views.DocumentViewSet)
+router.register(r'links', views.LinkViewSet)
 
 urlpatterns = patterns(
     '',

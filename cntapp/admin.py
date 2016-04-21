@@ -1,29 +1,32 @@
 from django.contrib import admin
 
-from cntapp.models import Directory, Document
-
+from cntapp.models import Directory, Document, Link
 
 class DirectoryInline(admin.TabularInline):
     model = Directory.sub_dirs.through
     fk_name = 'parent'
     extra = 1
 
-
 class DirectoryParentsInline(admin.TabularInline):
     model = Directory.sub_dirs.through
     fk_name = 'child'
     extra = 1
 
-
 class DirectoryDocumentInline(admin.TabularInline):
     model = Directory.documents.through
     extra = 1
 
+class DirectoryLinkInline(admin.TabularInline):
+    model = Directory.links.through
+    extra = 1
+
+@admin.register(Link)
+class LinkAdmin(admin.ModelAdmin):
+    inlines = (DirectoryLinkInline, )
 
 @admin.register(Document)
 class DocumentAdmin(admin.ModelAdmin):
     inlines = (DirectoryDocumentInline, )
-
 
 @admin.register(Directory)
 class DirectoryAdmin(admin.ModelAdmin):

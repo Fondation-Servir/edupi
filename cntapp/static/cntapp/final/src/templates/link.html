@@ -1,0 +1,19 @@
+<div class="row document-row"
+     role="button"
+     style="cursor: pointer;"
+     data-toggle="modal"
+     data-target="#modal-<%= model.get('id') %>">
+
+    <div class="col-xs-1 col-sm-1">
+    <a>
+    	<span style="font-size: 45px" class="glyphicon glyphicon-link"></span>
+    </a>
+    </div>
+    <div class="col-xs-11 col-sm-11">
+        <a><%= model.get('name') %></a>
+        <br>
+        <p>
+            <%= model.get('description') %>
+        </p>
+    </div>
+</div>

@@ -7,6 +7,7 @@ logger = logging.getLogger(__name__)
 
 class CntappConfig(AppConfig):
     name = 'cntapp'
+    verbose_name = 'Contenus EduPi'
 
     def ready(self):
         # app init code here

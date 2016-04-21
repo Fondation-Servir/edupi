@@ -12,8 +12,11 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-
 class Document(models.Model):
+    class Meta:
+        verbose_name = 'Document'
+        verbose_name_plural = "Documents"
+
     TYPE_VIDEO = 'v'
     TYPE_PDF = 'p'
     TYPE_IMAGE = 'i'
@@ -42,17 +45,33 @@ class Document(models.Model):
         return self.name
 
 
+class Link(models.Model):
+    class Meta:
+        verbose_name = 'Lien'
+        verbose_name_plural = "Liens"
+
+    name = models.CharField(max_length=100)
+    url = models.CharField(max_length=255)
+    description = models.TextField(max_length=250, blank=True)
+
+    def __str__(self):
+        return self.name
+
 # Receive the post signal and delete the file associated with the document instance.
 @receiver(post_delete, sender=Document)
 def document_delete(sender, instance, **kwargs):
     instance.file.delete(False)
     instance.thumbnail.delete(False)
 
-
 class Directory(models.Model):
+    class Meta:
+        verbose_name = 'Dossier'
+        verbose_name_plural = "Dossiers"
+
     MAX_NAME_LEN = 255
     name = models.CharField(max_length=MAX_NAME_LEN)
     documents = models.ManyToManyField(Document, blank=True)
+    links = models.ManyToManyField(Link, blank=True)
     sub_dirs = models.ManyToManyField(
         'self',
         blank=True,
@@ -125,13 +144,12 @@ class SubDirRelation(models.Model):
     parent = models.ForeignKey(Directory, related_name='parent')
     child = models.ForeignKey(Directory, related_name='child')
 
-
 def change_api_updated_at(sender=None, instance=None, *args, **kwargs):
     cache.set('api_updated_at_timestamp', datetime.datetime.utcnow())
 
-for model in [Document, Directory, SubDirRelation]:
+for model in [Document, Link, Directory, SubDirRelation]:
     post_save.connect(receiver=change_api_updated_at, sender=model)
     post_delete.connect(receiver=change_api_updated_at, sender=model)
 
-for through in [Directory.sub_dirs.through, Directory.documents.through]:
+for through in [Directory.sub_dirs.through, Directory.documents.through, Directory.links.through]:
     m2m_changed.connect(receiver=change_api_updated_at, sender=through)

@@ -13,8 +13,8 @@ from rest_framework_extensions.key_constructor.constructors import DefaultKeyCon
 from rest_framework_extensions.key_constructor import bits
 
 from cntapp.helpers import get_root_dirs
-from cntapp.serializers import DirectorySerializer, DocumentSerializer
-from cntapp.models import Directory, Document
+from cntapp.serializers import DirectorySerializer, DocumentSerializer, LinkSerializer
+from cntapp.models import Directory, Document, Link
 
 
 class UpdatedAtKeyBit(bits.KeyBitBase):
@@ -68,6 +68,21 @@ class DocumentViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
+class LinkViewSet(viewsets.ModelViewSet):
+    """
+    This viewset list `links`, and provides `create`, `retrieve`,
+    `update` and `destroy` options
+    """
+    queryset = Link.objects.all()
+    serializer_class = LinkSerializer
+
+    @cache_response(key_func=CustomObjectKeyConstructor())
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+
+    @cache_response(key_func=CustomListKeyConstructor())
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
 class DirectoryViewSet(viewsets.ModelViewSet):
     """
@@ -119,9 +134,11 @@ class DirectoryViewSet(viewsets.ModelViewSet):
         current_dir = self.get_object()
         dirs = DirectorySerializer(current_dir.get_sub_dirs(), many=True, context={'request': request})
         docs = DocumentSerializer(current_dir.documents, many=True, context={'request': request})
+        links = LinkSerializer(current_dir.links, many=True, context={'request': request})
         return Response({
             'directories': dirs.data,
-            'documents': docs.data
+            'documents': docs.data,
+            'links': links.data
         })
 
     @transaction.atomic
