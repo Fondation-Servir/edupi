@@ -22,7 +22,7 @@ In this tutorial, we suppose that you are using a Linux distribution.
 * Install Bower and fix path issue
 
         $> sudo npm install -g bower
-	$> sudo ln -s /usr/bin/nodejs /usr/bin/node
+        $> sudo ln -s /usr/bin/nodejs /usr/bin/node
 
 * Prepare a neat directory
 
