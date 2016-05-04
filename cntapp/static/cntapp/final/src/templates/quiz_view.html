@@ -1,0 +1,53 @@
+				<div id="questionTemplate">
+                    <h1>Quiz "<%= model.get('name') %>"<% if (typeof(question) !== "undefined") { %> - Question <%= questionIndex + 1 %> / <%= model.questionCount %><% } %></h1>
+                    <div class="well" id="questionBox">
+                    <% if (typeof(question) !== "undefined") { %>
+                    	<div class="row">
+                    	<% if (question.get('figure') === null) { %>
+                    		<div class="col-md-12">
+                    			<h3 style="margin-top: 0;"><%= question.getContent().html %></h3>
+                    		</div>
+                   		<% } else { %>
+                    		<div class="col-md-8">
+                    			<h3 style="margin-top: 0;"><%= question.getContent().html %></h3>
+                    		</div>
+                    		<div class="col-md-4">
+                    			<img class="img-responsive" src="<%= question.get('figure') %>" />
+                    		</div>
+                   		<% } %>
+                    	</div>
+					</div>
+					    <div class="row">
+							<div class="col-md-12">
+								<ul class="list-group">
+						            <% _.each( question.getAnswers().models, function(item){ %>
+						                <li id="li_answer_<%= item.get('id') %>" class="list-group-item"><div class="checkbox"><label class="radio" for="answer_<%= item.get('id') %>" style="cursor: pointer;"><input id="answer_<%= item.get('id') %>" type="radio" name="options" value="<%= item.get('id') %>"><%= item.getContent().html %></label></div></li>
+									<% }); %>
+								</ul>
+							</div>
+							<div class="col-md-12">
+			                    <div class="pull-right scores">
+									<h4>Score: <span id="score"><%= model.get('score') %></span> / <span id="possibleScore"><%= model.get('possibleScore') %></span></h4>
+								</div>
+								<div class="buttons">
+									<button class="checkResults btn btn-success" data-i18n="btn-check-results"> <span class="glyphicon glyphicon-ok-sign"></span></button>
+									<button class="nextQuestion btn btn-primary" data-i18n="[prepend]btn-next-question" style="display:none;"> <span class="glyphicon glyphicon-forward"></span></span></button>
+								</div>
+							</div>
+						</div>
+					<% } else { %>
+					<p data-i18n="loading">
+						Loading...
+                    </p>
+                    </div>
+					<% } %>
+				</div>
+				<div id="finalScoreTemplate" style="display: none;">
+					<center>
+						<h3 data-i18n="msg-final-score">Your final score is :</h3>
+						<h1><span id="scorefinal"><%= model.get('score') %></span> / <span id="possibleScorefinal"><%= model.get('possibleScore') %></span></h1>
+						<div class="buttons">
+							<button class="backtoDir btn btn-primary" data-i18n="btn-back-to-dir">Retour</button>
+						</div>
+					</center>
+				</div>

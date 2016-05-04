@@ -10,6 +10,7 @@ router = DefaultRouter()
 router.register(r'directories', views.DirectoryViewSet)
 router.register(r'documents', views.DocumentViewSet)
 router.register(r'links', views.LinkViewSet)
+router.register(r'quiz', views.QuizViewSet)
 
 urlpatterns = patterns(
     '',

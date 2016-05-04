@@ -15,5 +15,10 @@
 
   "msg-retrieve-faulure-because-no-network": "Failed to retrieve content from the Server, there might be something wrong with your network.",
   "msg-content-not-exist": "The content that you requested does not exist!",
-  "msg-unknown-retrieve-failure": "Failed to retrieve content from the Server, and I don't know why :("
+  "msg-unknown-retrieve-failure": "Failed to retrieve content from the Server, and I don't know why :(",
+
+  "btn-check-results": "Check results",
+  "btn-next-question": "Next question",
+  "btn-back-to-dir": "Retour",
+  "msg-final-score": "Your final score is :"
 }

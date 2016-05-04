@@ -8,7 +8,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from wand.image import Image
 from rest_framework import serializers
 
-from .models import Directory, Document, Link
+from .models import Directory, Document, Link, Quiz, Question, Answer
 
 
 logger = logging.getLogger(__name__)
@@ -27,6 +27,24 @@ class LinkSerializer(serializers.ModelSerializer):
     class Meta:
         model = Link
         fields = ('id', 'url', 'name', 'description')
+
+class AnswerSerializer(serializers.ModelSerializer):
+	class Meta:
+	    model = Answer
+	    fields = ('id', 'question', 'content', 'correct')
+
+class QuestionSerializer(serializers.ModelSerializer):
+	answer_set = AnswerSerializer(many=True, read_only=True)
+	class Meta:
+	    model = Question
+	    fields = ('id', 'figure', 'content', 'explanation', 'answer_set')
+
+class QuizSerializer(serializers.ModelSerializer):
+	question_set = QuestionSerializer(many=True, read_only=True)
+
+	class Meta:
+	    model = Quiz
+	    fields = ('id', 'name', 'description', 'question_set')
 
 class DocumentSerializer(serializers.ModelSerializer):
     directory_set = DirectorySerializer(many=True, read_only=True)

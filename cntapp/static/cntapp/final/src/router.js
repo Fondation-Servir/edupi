@@ -4,12 +4,13 @@ define([
     'views/directory_list', 'views/statebar',
     'views/document_list', 'views/content_structure',
     'views/search_page',
+    'views/quiz_view',
     'models/directory'
 ], function (Backbone,
              IndexView, BodyStructureView,
              DirectoryListView, StateBarView,
              DocumentListView, ContentStructureView,
-             SearchPageView,
+             SearchPageView, QuizView,
              Directory) {
     var AppRouter, _currentPath, _refreshCurrentPath;
 
@@ -21,6 +22,9 @@ define([
 
             // querystring: #documents?queryString
             this.route(/^documents\?(.*)$/, 'showSearchResult');
+
+            // valid path 1
+            this.route(/^quiz\/((?:\d+)(?:\/\d+)*)\/((?:\d+)*)$/, 'showQuiz');
 
             this.route(/^$/, 'indexRoute');
         },
@@ -45,8 +49,12 @@ define([
             $('#state-nav').html('');
             console.log('search documents with querystring="' + queryString + '"');
             this.renderToContent(new SearchPageView({queryString: queryString}));
-        }
+        },
 
+        showQuiz: function (path, quizId) {
+            $("#state-nav").html(new StateBarView({path: path}).refreshAndRender().el);
+            this.renderToContent(new QuizView({path: path, quizId: quizId}));
+        },
     });
 
     return AppRouter;

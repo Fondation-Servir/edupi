@@ -25,6 +25,7 @@ define([
             this.directories = new Backbone.Collection({model: Backbone.Model});
             this.documents = new Backbone.Collection({model: Backbone.Model});
             this.links = new Backbone.Collection({model: Backbone.Model});
+            this.quiz = new Backbone.Collection({model: Backbone.Model});
         },
 
         showContent: function (request, url) {
@@ -37,11 +38,13 @@ define([
                 that.directories.reset(data["directories"]);
                 that.documents.reset(data["documents"]);
                 that.links.reset(data["links"]);
+                that.quiz.reset(data["quiz"]);
 
                 // check if there is any content
                 if (that.directories.length === 0
                     && that.documents.length === 0
-					&& that.links.length === 0) {
+					&& that.links.length === 0
+					&& that.quiz.length === 0) {
                     console.log('empty directory');
                     that.showErrorMsg(i18n.t("msg-no-sub-content"));
                     return
@@ -57,7 +60,8 @@ define([
                 documentsView = new DocumentListView({
                     parentId: that.parentId,
                     documents: that.documents,
-                    links: that.links
+                    links: that.links,
+                    quiz: that.quiz
                 });
                 that.$("#documents-container").html(documentsView.render().el);
             });

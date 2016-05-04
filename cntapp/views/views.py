@@ -13,8 +13,8 @@ from rest_framework_extensions.key_constructor.constructors import DefaultKeyCon
 from rest_framework_extensions.key_constructor import bits
 
 from cntapp.helpers import get_root_dirs
-from cntapp.serializers import DirectorySerializer, DocumentSerializer, LinkSerializer
-from cntapp.models import Directory, Document, Link
+from cntapp.serializers import DirectorySerializer, DocumentSerializer, LinkSerializer, QuizSerializer
+from cntapp.models import Directory, Document, Link, Quiz, Question, Answer
 
 
 class UpdatedAtKeyBit(bits.KeyBitBase):
@@ -84,6 +84,22 @@ class LinkViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
+class QuizViewSet(viewsets.ModelViewSet):
+    """
+    This viewset list `links`, and provides `create`, `retrieve`,
+    `update` and `destroy` options
+    """
+    queryset = Quiz.objects.all()
+    serializer_class = QuizSerializer
+
+    @cache_response(key_func=CustomObjectKeyConstructor())
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+
+    @cache_response(key_func=CustomListKeyConstructor())
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
 class DirectoryViewSet(viewsets.ModelViewSet):
     """
     This viewset list `directories`, and provides `create`, `retrieve`,
@@ -135,10 +151,12 @@ class DirectoryViewSet(viewsets.ModelViewSet):
         dirs = DirectorySerializer(current_dir.get_sub_dirs(), many=True, context={'request': request})
         docs = DocumentSerializer(current_dir.documents, many=True, context={'request': request})
         links = LinkSerializer(current_dir.links, many=True, context={'request': request})
+        quiz = QuizSerializer(current_dir.quizz, many=True, context={'request': request})
         return Response({
             'directories': dirs.data,
             'documents': docs.data,
-            'links': links.data
+            'links': links.data,
+            'quiz': quiz.data
         })
 
     @transaction.atomic

@@ -7,15 +7,17 @@ from imagekit.processors import ResizeToFill
 from django.db import models, transaction
 from django.db.models.signals import post_save, post_delete, m2m_changed
 from django.core.cache import cache
+from django.utils.translation import ugettext as _
 
 import logging
+import mathfield
 
 logger = logging.getLogger(__name__)
 
 class Document(models.Model):
     class Meta:
         verbose_name = 'Document'
-        verbose_name_plural = "Documents"
+        verbose_name_plural = 'Documents'
 
     TYPE_VIDEO = 'v'
     TYPE_PDF = 'p'
@@ -48,7 +50,7 @@ class Document(models.Model):
 class Link(models.Model):
     class Meta:
         verbose_name = 'Lien'
-        verbose_name_plural = "Liens"
+        verbose_name_plural = 'Liens'
 
     name = models.CharField(max_length=100)
     url = models.CharField(max_length=255)
@@ -56,6 +58,91 @@ class Link(models.Model):
 
     def __str__(self):
         return self.name
+
+class Quiz(models.Model):
+	class Meta:
+		verbose_name = _('Quiz')
+		verbose_name_plural = _('Quizzes')
+
+	name = models.CharField(verbose_name=_("Title"), max_length=60, blank=False)
+	description = models.TextField(verbose_name=_("Description"), blank=True, help_text=_("a description of the quiz"))
+
+	def save(self, force_insert=False, force_update=False, *args, **kwargs):
+#		if self.pass_mark > 100:
+#		    raise ValidationError('%s is above 100' % self.pass_mark)
+
+		super(Quiz, self).save(force_insert, force_update, *args, **kwargs)
+
+	def __str__(self):
+	    return self.name
+
+	def get_questions(self):
+	    return self.question_set.all().select_subclasses()
+
+	@property
+	def get_max_score(self):
+	    return self.get_questions().count()
+
+class Question(models.Model):
+	quiz = models.ForeignKey(Quiz,
+	                              verbose_name=_("Quiz"))
+
+	figure = models.ImageField(upload_to='uploads/%Y/%m/%d',
+	                           blank=True,
+	                           null=True,
+	                           verbose_name=_("Figure"))
+
+	content = mathfield.MathField(blank=False,
+	                           help_text=_("Enter the question text that "
+	                                       "you want displayed"),
+	                           verbose_name=_('Question'))
+
+	explanation = models.TextField(max_length=2000,
+	                               blank=True,
+	                               help_text=_("Explanation to be shown "
+	                                           "after the question has "
+	                                           "been answered."),
+	                               verbose_name=_('Explanation'))
+
+	class Meta:
+	    verbose_name = _("Question")
+	    verbose_name_plural = _("Questions")
+
+	def __str__(self):
+		return _('Quiz') + ' "' + self.quiz.name + '" ' + _("Question") + ' ' + str(self.id)
+
+	def order_answers(self, queryset):
+ 		return queryset.order_by('?')
+
+	def get_answers(self):
+	    return self.order_answers(Answer.objects.filter(question=self))
+
+	def get_answers_list(self):
+	    return [(answer.id, answer.content) for answer in
+	            self.order_answers(Answer.objects.filter(question=self))]
+
+	def answer_choice_to_string(self, guess):
+	    return Answer.objects.get(id=guess).content
+
+class Answer(models.Model):
+	question = models.ForeignKey(Question, verbose_name=_("Question"))
+
+	content = mathfield.MathField(blank=False,
+	                           help_text=_("Enter the answer text that "
+	                                       "you want displayed"),
+	                           verbose_name=_("Content"))
+
+	correct = models.BooleanField(blank=False,
+	                              default=False,
+	                              help_text=_("Is this a correct answer?"),
+	                              verbose_name=_("Correct"))
+
+	def __str__(self):
+	    return _("Question") + ' ' + str(self.question.id) + ' ' + _("Answer") + ' ' +  str(self.id)
+
+	class Meta:
+	    verbose_name = _("Réponse")
+	    verbose_name_plural = _("Réponses")
 
 # Receive the post signal and delete the file associated with the document instance.
 @receiver(post_delete, sender=Document)
@@ -72,6 +159,7 @@ class Directory(models.Model):
     name = models.CharField(max_length=MAX_NAME_LEN)
     documents = models.ManyToManyField(Document, blank=True)
     links = models.ManyToManyField(Link, blank=True)
+    quizz = models.ManyToManyField(Quiz, blank=True)
     sub_dirs = models.ManyToManyField(
         'self',
         blank=True,
@@ -147,9 +235,9 @@ class SubDirRelation(models.Model):
 def change_api_updated_at(sender=None, instance=None, *args, **kwargs):
     cache.set('api_updated_at_timestamp', datetime.datetime.utcnow())
 
-for model in [Document, Link, Directory, SubDirRelation]:
+for model in [Document, Link, Directory, Quiz, Question, Answer, SubDirRelation]:
     post_save.connect(receiver=change_api_updated_at, sender=model)
     post_delete.connect(receiver=change_api_updated_at, sender=model)
 
-for through in [Directory.sub_dirs.through, Directory.documents.through, Directory.links.through]:
+for through in [Directory.sub_dirs.through, Directory.documents.through, Directory.links.through, Directory.quizz.through]:
     m2m_changed.connect(receiver=change_api_updated_at, sender=through)

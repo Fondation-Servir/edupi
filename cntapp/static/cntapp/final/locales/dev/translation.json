@@ -16,5 +16,10 @@
 
   "msg-retrieve-faulure-because-no-network": "Impossible de récupérer le contenu du serveur, il peut y avoir un problème avec votre réseau.",
   "msg-content-not-exist": "Oooooops, les contenus que vous demandez n'existent pas.",
-  "msg-unknown-retrieve-failure": "Erreur inconnue: impossible de récupérer les contenus du serveur."
+  "msg-unknown-retrieve-failure": "Erreur inconnue: impossible de récupérer les contenus du serveur.",
+
+  "btn-check-results": "Valider et vérifier",
+  "btn-next-question": "Question suivante",
+  "btn-back-to-dir": "Retour",
+  "msg-final-score": "Votre score final est :"
 }

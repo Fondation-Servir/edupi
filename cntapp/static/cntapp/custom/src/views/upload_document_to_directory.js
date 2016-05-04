@@ -22,7 +22,7 @@ define([
                     // office files
                 ".ppt,.pptx,.pot,.potx,.pps,.ppsx,.ppa," +
                 ".doc,.docx,.dot,.dotx," +
-                ".xls,.xlsx,.xlt,.xltx,.xla",
+                ".xls,.xlsx,.xlt,.xltx,.xla,.pdf",
 
                 init: function () {
                     var uploadInfo = function (msg) {
