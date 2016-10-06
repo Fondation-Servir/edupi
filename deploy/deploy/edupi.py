@@ -16,7 +16,7 @@ class EdupiDeployManager():
         self.site_folder = '/home/%s/sites/%s' % (RASP_USER_NAME, EDUPI_SITE_NAME)
         self.source_folder = os.path.join(self.site_folder, SOURCE_DIR_NAME)
         self.nginx_config = '/etc/nginx/sites-enabled/%s' % EDUPI_SITE_NAME
-        self.upstart_config = '/etc/init/gunicorn-%s.conf' % EDUPI_SITE_NAME
+        self.supervisor_config = '/etc/supervisor/conf.d/edupi.conf'
 
     def deploy(self, commit, user):
         # Nginx conf
@@ -24,7 +24,7 @@ class EdupiDeployManager():
         # Nginx logrotate config
         send_file('/etc/logrotate.d/nginx', mod='644')
         # Upstart
-        send_file(self.upstart_config, mod='644')
+        send_file(self.supervisor_config, mod='644')
 
         self._create_directory_structure_if_necessary(self.site_folder)
         self._get_source(self.source_folder, commit, user)
@@ -33,7 +33,8 @@ class EdupiDeployManager():
         self._update_database(self.source_folder)
 
         # reboot the application
-        run('sudo restart gunicorn-%s' % EDUPI_SITE_NAME)
+        run('sudo service supervisor restart')
+        run('sudo service nginx restart')
 
     def uninstall(self, purge_data=False):
         # TODO: kill edupi
@@ -42,8 +43,8 @@ class EdupiDeployManager():
         if exists(self.nginx_config):
             run('sudo rm %s' % self.nginx_config)
 
-        if exists(self.upstart_config):
-            run('sudo rm %s' % self.upstart_config)
+        if exists(self.supervisor_config):
+            run('sudo rm %s' % self.supervisor_config)
 
         def rm_sub_dir(dir_list):
             for subfolder in dir_list:

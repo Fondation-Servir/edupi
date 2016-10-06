@@ -1,5 +1,5 @@
 server {
-    listen 8021;
+    listen 80;
     server_name edupi.fondationorange.org;
 
     client_max_body_size 500M;
@@ -18,4 +18,9 @@ server {
         proxy_read_timeout 300;
         proxy_set_header Host $host:$server_port;
     }
+    allow 10.0.0.0/24;
+    allow 192.168.1.0/24;
+    allow 192.168.0.0/24;
+    allow 127.0.0.1/24;
+    deny all;
 }

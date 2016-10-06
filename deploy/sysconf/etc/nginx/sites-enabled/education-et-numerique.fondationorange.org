@@ -1,0 +1,16 @@
+server {
+    listen 80;
+    server_name education-et-numerique.fondationorange.org;
+
+    root /home/pi/sites/education-et-numerique.fondationorange.org/;
+    index index.html;
+
+    location ~*\.(sh|shell)$ {
+            deny all;
+    }
+    allow 10.0.0.0/24;
+    allow 192.168.1.0/24;
+    allow 192.168.0.0/24;
+    allow 127.0.0.1/24;
+    deny all;
+}
