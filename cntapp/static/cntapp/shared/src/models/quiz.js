@@ -17,6 +17,7 @@ define([
 			questionCount: 0,
 		},
         urlRoot: '/api/quiz/',
+        type: 'quiz',
 
 		initialize: function () {
             this.questions = new QuestionCollection();

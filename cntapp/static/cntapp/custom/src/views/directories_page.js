@@ -7,12 +7,12 @@ define([
     'backbone',
     'views/structure_content', 'views/state_bar', 'views/action_bar',
     'models/directory',
-    'collections/directories', 'collections/documents',
+    'collections/directories', 'collections/documents', 'collections/links', 'collections/quiz',
     'text!templates/basic_page.html'
 ], function (_, Backbone,
              StructureContentView, StateBarView, ActionBarView,
              Directory,
-             DirectoriesCollection, DocumentsCollection,
+             DirectoriesCollection, DocumentsCollection, LinksCollection, QuizCollection,
              basicPageTemplate) {
     var DirectoriesPageView, TEMPLATE;
 
@@ -26,6 +26,8 @@ define([
             this.parentId = this.pathArray[this.pathArray.length - 1];
             this.currentDirectories = new DirectoriesCollection({model: Directory});
             this.currentDocuments = new DocumentsCollection();
+            this.currentLinks = new LinksCollection();
+            this.currentQuiz = new QuizCollection();
         },
 
         render: function () {
@@ -36,11 +38,15 @@ define([
             actionBarView = new ActionBarView({
                 path: this.path,
                 parentId: this.parentId,
-                currentDocuments: this.currentDocuments
+                currentDocuments: this.currentDocuments,
+                currentLinks: this.currentLinks,
+                currentQuiz: this.currentQuiz
             });
             contentView = new StructureContentView({
                 currentDirectories: this.currentDirectories,
                 currentDocuments: this.currentDocuments,
+                currentLinks: this.currentLinks,
+                currentQuiz: this.currentQuiz,
                 path: this.path,
                 parentId: this.parentId
             });

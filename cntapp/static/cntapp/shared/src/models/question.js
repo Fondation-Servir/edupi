@@ -3,8 +3,8 @@ define([
     'models/base_model',
     'collections/answer',
     'models/answer',
-
-], function (Backbone, BaseModel, AnswerCollection, Answer) {
+	'katex'
+], function (Backbone, BaseModel, AnswerCollection, Answer, katex) {
 
     var Question = BaseModel.extend({
 		defaults: {
@@ -25,6 +25,19 @@ define([
 			return (JSON.parse(this.get('content')));
 		},
 
+		getContentHTML: function() {
+			return (JSON.parse(this.get('content')).html);
+		},
+
+		getContentRAW: function() {
+			return (JSON.parse(this.get('content')).raw);
+		},
+
+		getContentHTMLz: function() {
+			Encoder.EncodeType = "entity";
+			return (katex.renderToString(Encoder.htmlEncode(JSON.parse(this.get('content')).raw)));
+		},
+
        	getAnswers: function() {
        		var that = this;
 			this.answers.reset();
@@ -40,7 +53,7 @@ define([
 				}
 				that.answers.add(a);
 			});
-			that.set({'possibleScore': possibleScore})
+			this.set({'possibleScore': possibleScore})
 
        		return this.answers;
  		},

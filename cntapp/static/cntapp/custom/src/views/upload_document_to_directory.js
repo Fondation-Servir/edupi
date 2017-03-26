@@ -51,7 +51,6 @@ define([
                         view.$('.btn-finish').attr('disabled', false);
                     });
                     this.on('success', function (file, json) {
-                        console.log(json);
                         var url = "/api/directories/" + view.parentId + '/documents/';
                         var data = {"documents": json['id']};
                         $.ajax({

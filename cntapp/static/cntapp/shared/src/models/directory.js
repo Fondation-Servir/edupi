@@ -8,6 +8,7 @@ define([
     var Directory = BaseModel.extend({
 
         urlRoot: '/api/directories',
+        type: 'directories',
 
         validate: function (attrs, options) {
             if (attrs.name.length <= 0) {

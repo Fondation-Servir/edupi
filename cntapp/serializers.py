@@ -24,9 +24,11 @@ class DirectorySerializer(serializers.ModelSerializer):
         fields = ('id', 'url', 'name')
 
 class LinkSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Link
-        fields = ('id', 'url', 'name', 'description')
+	directory_set = DirectorySerializer(many=True, read_only=True)
+
+	class Meta:
+		model = Link
+		fields = ('id', 'url', 'name', 'description', 'directory_set')
 
 class AnswerSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -37,14 +39,15 @@ class QuestionSerializer(serializers.ModelSerializer):
 	answer_set = AnswerSerializer(many=True, read_only=True)
 	class Meta:
 	    model = Question
-	    fields = ('id', 'figure', 'content', 'explanation', 'answer_set')
+	    fields = ('id', 'quiz', 'figure', 'content', 'explanation', 'answer_set')
 
 class QuizSerializer(serializers.ModelSerializer):
+	directory_set = DirectorySerializer(many=True, read_only=True)
 	question_set = QuestionSerializer(many=True, read_only=True)
 
 	class Meta:
 	    model = Quiz
-	    fields = ('id', 'name', 'description', 'question_set')
+	    fields = ('id', 'name', 'description', 'question_set', 'directory_set')
 
 class DocumentSerializer(serializers.ModelSerializer):
     directory_set = DirectorySerializer(many=True, read_only=True)

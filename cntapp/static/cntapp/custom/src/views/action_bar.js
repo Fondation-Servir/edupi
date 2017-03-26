@@ -1,11 +1,11 @@
 define([
     'underscore', 'backbone',
-    'views/link_documents_modal', 'views/link_directory_modal',
+    'views/link_documents_modal', 'views/link_directory_modal', 'views/link_links_modal', 'views/link_quiz_modal',
     'text!templates/action_bar.html',
     'text!templates/create_directory_modal.html',
     'text!templates/confirm_modal.html'
 ], function (_, Backbone,
-             LinkDocumentModalView, LinkDirectoryModalView,
+             LinkDocumentModalView, LinkDirectoryModalView, LinkLinksModalView, LinkQuizModalView,
              actionBarTemplate, createDirectoryModalTemplate, confirmModalTemplate) {
 
     var CREATE_DIRECTORY_MODAL_TEMPLATE = _.template(createDirectoryModalTemplate),
@@ -18,6 +18,8 @@ define([
             this.path = options.path;
             this.parentId = options.parentId;
             this.currentDocuments = options.currentDocuments;
+            this.currentLinks = options.currentLinks;
+            this.currentQuiz = options.currentQuiz;
         },
 
         render: function () {
@@ -57,6 +59,27 @@ define([
                 });
                 this.$('.modal-area').html(modal.render().el);
                 modal.toggle();
+            },
+
+            'click .btn-link-links': function () {
+                var modal = new LinkLinksModalView({
+                    currentLinks: this.currentLinks,
+                    parentId: this.parentId
+                });
+                this.$('.modal-area').html(modal.render().el);
+                modal.toggle();
+                console.debug('show links...');
+            },
+
+            'click .btn-link-quiz': function () {
+                var modal = new LinkQuizModalView({
+                    currentQuiz: this.currentQuiz,
+                    parentId: this.parentId
+                });
+                console.log(modal);
+                this.$('.modal-area').html(modal.render().el);
+                modal.toggle();
+                console.debug('show quiz...');
             }
         },
 

@@ -2,11 +2,11 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'views/document_list',
+    'views/generic_list',
     'views/directories',
     'models/directory'
 ], function ($, _, Backbone,
-             DocumentListView, DirectoriesView,
+             GenericListView, DirectoriesView,
              Directory) {
 
     var StructureContentView = Backbone.View.extend({
@@ -14,6 +14,8 @@ define([
         initialize: function (options) {
             this.currentDirectories = options.currentDirectories;
             this.currentDocuments = options.currentDocuments;
+            this.currentLinks = options.currentLinks;
+            this.currentQuiz = options.currentQuiz;
             this.path = options.path || null;
             this.parentId = options.parentId || null;
         },
@@ -31,12 +33,14 @@ define([
 
             // show documents
             if (this.parentId) {
-                this.documentListView = new DocumentListView({
+                this.genericListView = new GenericListView({
                     parentId: this.parentId,
-                    currentDocuments: this.currentDocuments
+                    currentDocuments: this.currentDocuments,
+                    currentLinks: this.currentLinks,
+                    currentQuiz: this.currentQuiz
                 });
                 this.$el.append('<div id="documents_table" class="col-md-12"></div>');
-                this.$("#documents_table").html(this.documentListView.render().el);
+                this.$("#documents_table").html(this.genericListView.render().el);
             }
 
             return this;

@@ -13,7 +13,7 @@ from rest_framework_extensions.key_constructor.constructors import DefaultKeyCon
 from rest_framework_extensions.key_constructor import bits
 
 from cntapp.helpers import get_root_dirs
-from cntapp.serializers import DirectorySerializer, DocumentSerializer, LinkSerializer, QuizSerializer
+from cntapp.serializers import DirectorySerializer, DocumentSerializer, LinkSerializer, QuizSerializer, QuestionSerializer, AnswerSerializer
 from cntapp.models import Directory, Document, Link, Quiz, Question, Answer
 
 
@@ -91,6 +91,38 @@ class QuizViewSet(viewsets.ModelViewSet):
     """
     queryset = Quiz.objects.all()
     serializer_class = QuizSerializer
+
+    @cache_response(key_func=CustomObjectKeyConstructor())
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+
+    @cache_response(key_func=CustomListKeyConstructor())
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+class QuestionViewSet(viewsets.ModelViewSet):
+    """
+    This viewset list `links`, and provides `create`, `retrieve`,
+    `update` and `destroy` options
+    """
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
+
+    @cache_response(key_func=CustomObjectKeyConstructor())
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+
+    @cache_response(key_func=CustomListKeyConstructor())
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+class AnswerViewSet(viewsets.ModelViewSet):
+    """
+    This viewset list `links`, and provides `create`, `retrieve`,
+    `update` and `destroy` options
+    """
+    queryset = Answer.objects.all()
+    serializer_class = AnswerSerializer
 
     @cache_response(key_func=CustomObjectKeyConstructor())
     def retrieve(self, request, *args, **kwargs):
@@ -223,6 +255,29 @@ class DirectoryViewSet(viewsets.ModelViewSet):
         else:
             return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
+    @detail_route(methods=['post', 'get', 'delete'])
+    def links(self, request, *args, **kwargs):
+        if request.method == 'GET':
+            return self.get_links(request, *args, **kwargs)
+        elif request.method == 'POST':
+            return self.add_links(request, *args, **kwargs)
+        elif request.method == 'DELETE':
+            return self.delete_links(request, *args, **kwargs)
+        else:
+            return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    @detail_route(methods=['post', 'get', 'delete'])
+    def quiz(self, request, *args, **kwargs):
+        if request.method == 'GET':
+            return self.get_quiz(request, *args, **kwargs)
+        elif request.method == 'POST':
+            return self.add_quiz(request, *args, **kwargs)
+        elif request.method == 'DELETE':
+            return self.delete_quiz(request, *args, **kwargs)
+        else:
+            return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
     @staticmethod
     def _check_json_documents_in_request(request):
         if not isinstance(request.data, dict):
@@ -232,10 +287,39 @@ class DirectoryViewSet(viewsets.ModelViewSet):
             return Response({'documents': 'This field should contain a list of document id'},
                             status=status.HTTP_400_BAD_REQUEST)
 
+    @staticmethod
+    def _check_json_links_in_request(request):
+        if not isinstance(request.data, dict):
+            return Response({'status': 'JSON data is expected'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if 'links' not in request.data:
+            return Response({'links': 'This field should contain a list of link id'},
+                            status=status.HTTP_400_BAD_REQUEST)
+    @staticmethod
+    def _check_json_quiz_in_request(request):
+        if not isinstance(request.data, dict):
+            return Response({'status': 'JSON data is expected'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if 'quiz' not in request.data:
+            return Response({'quiz': 'This field should contain a list of quiz id'},
+                            status=status.HTTP_400_BAD_REQUEST)
+
     @cache_response(key_func=CustomListKeyConstructor())
     def get_documents(self, request, *args, **kwargs):
         current_dir = self.get_object()
         serializer = DocumentSerializer(current_dir.documents, many=True, context={'request': request})
+        return Response(serializer.data)
+
+    @cache_response(key_func=CustomListKeyConstructor())
+    def get_links(self, request, *args, **kwargs):
+        current_dir = self.get_object()
+        serializer = LinkSerializer(current_dir.documents, many=True, context={'request': request})
+        return Response(serializer.data)
+
+    @cache_response(key_func=CustomListKeyConstructor())
+    def get_quiz(self, request, *args, **kwargs):
+        current_dir = self.get_object()
+        serializer = QuizSerializer(current_dir.documents, many=True, context={'request': request})
         return Response(serializer.data)
 
     def add_documents(self, request, *args, **kwargs):
@@ -271,4 +355,74 @@ class DirectoryViewSet(viewsets.ModelViewSet):
             return Response({'status': 'documents not exist in directory!'}, status=status.HTTP_404_NOT_FOUND)
 
         current_dir.documents.remove(*documents)
+        return Response(status=status.HTTP_200_OK)
+
+    def add_links(self, request, *args, **kwargs):
+        res = self._check_json_links_in_request(request)
+        if res is not None:
+            return res
+
+        if isinstance(request.data['links'], str):
+            links_id = [int(request.data['links'])]
+        else:
+            links_id = [int(d) for d in request.data['links']]
+
+        links = Link.objects.filter(pk__in=links_id)
+        if links.count() != len(links_id):
+            return Response({'status': 'link objects not exist!'}, status=status.HTTP_404_NOT_FOUND)
+
+        self.get_object().links.add(*links)
+        return Response(status=status.HTTP_201_CREATED)
+
+    def delete_links(self, request, *args, **kwargs):
+        res = self._check_json_links_in_request(request)
+        if res is not None:
+            return res
+
+        if isinstance(request.data['links'], str):
+            links_id = [int(request.data['links'])]
+        else:
+            links_id = [int(d) for d in request.data['links']]
+
+        current_dir = self.get_object()
+        links = current_dir.links.filter(pk__in=links_id)
+        if links.count() != len(links_id):
+            return Response({'status': 'links not exist in directory!'}, status=status.HTTP_404_NOT_FOUND)
+
+        current_dir.links.remove(*links)
+        return Response(status=status.HTTP_200_OK)
+
+    def add_quiz(self, request, *args, **kwargs):
+        res = self._check_json_quiz_in_request(request)
+        if res is not None:
+            return res
+
+        if isinstance(request.data['quiz'], str):
+            quiz_id = [int(request.data['quiz'])]
+        else:
+            quiz_id = [int(d) for d in request.data['quiz']]
+
+        quiz = Quiz.objects.filter(pk__in=quiz_id)
+        if quiz.count() != len(quiz_id):
+            return Response({'status': 'quiz objects not exist!'}, status=status.HTTP_404_NOT_FOUND)
+
+        self.get_object().quizz.add(*quiz)
+        return Response(status=status.HTTP_201_CREATED)
+
+    def delete_quiz(self, request, *args, **kwargs):
+        res = self._check_json_quiz_in_request(request)
+        if res is not None:
+            return res
+
+        if isinstance(request.data['quiz'], str):
+            quiz_id = [int(request.data['quiz'])]
+        else:
+            quiz_id = [int(d) for d in request.data['quiz']]
+
+        current_dir = self.get_object()
+        quiz = current_dir.quizz.filter(pk__in=quiz_id)
+        if quiz.count() != len(quiz_id):
+            return Response({'status': 'quiz not exist in directory!'}, status=status.HTTP_404_NOT_FOUND)
+
+        current_dir.quizz.remove(*quiz)
         return Response(status=status.HTTP_200_OK)

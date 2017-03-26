@@ -1,0 +1,40 @@
+<div class="row">
+    <div class="col-sm-2 col-lg-1">
+    	<span class="glyphicon glyphicon-question-sign" style="font-size: 45px"></span>
+    </div>
+    <div class="col-sm-6 col-lg-5">
+			<a href="<%= model.get('url') %>" target="_blank"><%= model.get('name') %></a>
+        <br />
+        <p>
+            <%= model.get('description') %>
+        </p>
+    </div>
+    <div class="col-sm-3 col-lg-5">
+    	<%= model.get('question_set').length %> question(s)
+    </div>
+
+    <div class="col-sm-1 col-lg-1 actions">
+        <span class="glyphicon glyphicon-pencil custom-glyphicon"
+              title="edit"
+              data-i18n="[title]popupinfo-edit"
+                ></span>
+
+        <% if (! isSearchResult) { %>
+        <span class="glyphicon glyphicon-link custom-glyphicon"
+              title="unlink"
+              data-i18n="[title]popupinfo-unlink"
+              data-toggle='modal'
+              data-target='#modal-confirm'></span>
+        <% } %>
+
+        <span class="glyphicon glyphicon-trash custom-glyphicon"
+              title="delete"
+              data-i18n="[title]popupinfo-delete"
+              data-toggle='modal'
+              data-target='#modal-confirm'>
+        </span>
+
+    </div>
+    <div class="modal-area"></div>
+</div>
+

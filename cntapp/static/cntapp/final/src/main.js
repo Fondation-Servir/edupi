@@ -9,6 +9,8 @@ require.config({
         'bootstrap': '/static/bootstrap/dist/js/bootstrap',
         'text': '/static/text/text',
         'i18n': '/static/i18next/i18next',
+        'katex': '/static/mathfield/js/katex.min',
+        'encoder': '/static/mathfield/js/encoder',
 
         // shared modules
         'collections': '../../shared/src/collections',
@@ -28,6 +30,8 @@ require.config({
 define('kickstart', function (require) {
     // import external js modules
     require('bootstrap');
+    require('katex');
+    require('encoder');
 
     // define global variables here if needed
     // `cntapp` contains the current state of the application

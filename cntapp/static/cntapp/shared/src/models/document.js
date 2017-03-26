@@ -7,6 +7,7 @@ define([
     var DocumentModel = BaseModel.extend({
 
         urlRoot: '/api/documents/',
+        type: 'documents',
 
         validate: function (attrs, options) {
             if (attrs.name.length <= 0) {

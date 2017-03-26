@@ -5,6 +5,8 @@ define([
 ], function (Backbone, BaseModel) {
 
     var Answer = BaseModel.extend({
+        urlRoot: '/api/answer/',
+
 		defaults: {
 			items: [],
 		},

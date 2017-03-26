@@ -31,7 +31,7 @@ define([
 
     var DocumentSearchView = Backbone.View.extend({
         tagName: "ul",
-        id: "document-list",
+        id: "generic-list",
 
         initialize: function (options) {
             options = options || {};

@@ -11,6 +11,8 @@ require.config({
         'bootstrap_table': '/static/bootstrap-table/src/bootstrap-table',
         'bootstrap_table_editable': '/static/bootstrap-table/src/extensions/editable/bootstrap-table-editable',
         'text': '/static/text/text',
+        'katex': '/static/mathfield/js/katex.min',
+        'encoder': '/static/mathfield/js/encoder',
         'dropzone': '/static/dropzone/dist/dropzone-amd-module',
         'i18n': '/static/i18next/i18next',
 
@@ -40,6 +42,8 @@ require.config({
 define('kickstart', function (require) {
     // import external js modules
     require('bootstrap');
+    require('katex');
+    require('encoder');
 
     // define global variables here if needed
     // `cntapp` contains the current state of the application

@@ -1,0 +1,139 @@
+<div class="form-group">
+    <label data-i18n="document-name">Name</label>
+    <input type='text'
+           class="form-control name-text"
+           data-i18n="[placeholder]document-name"
+           name='name' value="<%= model.get('name') %> " placeholder="name"/>
+</div>
+
+<div class="form-group">
+    <label>Description</label>
+    <textarea name="description"
+              class="form-control"
+              rows="3"
+              maxlength="250"
+              data-i18n="[placeholder]placeholder-add-document-description"
+              placeholder="add description here"><%= model.get('description') %></textarea>
+</div>
+
+<div class="form-group" id="questions">
+    <label>Question(s)</label>
+    <% _.each(model.questions.models, function(question, index) { %>
+    <div class="row" rel="<%= question.get('id') %>">
+	    <div class="col-sm-6 col-lg-6">
+		    <div class="form-group">
+			    <button class="btn btn-danger btn-del-question" style="display: inline-block; float:right;">
+			        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+			    </button>
+		    	<label><%= index + 1 %>.</label>
+				Enonc&eacute; de la question<br />
+	 			<textarea id="question-<%= question.get('id') %>"
+				  name="question[<%= question.get('id') %>]"
+	              class="form-control question"
+	              rows="3"
+	              maxlength="250"
+	              data-i18n="[placeholder]placeholder-add-question"
+	              placeholder="add question here"><%- question.getContentRAW() %></textarea>
+	              <input name="figure[<%= question.get('id') %>]" type="file"/>
+    		</div>
+		    <div class="form-group">
+		    	R&eacute;ponses (cocher les bonnes r&eacute;ponses)<br />
+		    	<ul class="list-group">
+		    		<% _.each(question.getAnswers().models, function(answer) { %>
+		            <li class="list-group-item" id="li_answer_<%= answer.get('id') %>" rel="<%= answer.get('id') %>">
+						<div class="checkbox">
+							<button rel="<%= answer.get('id') %>" class="btn btn-danger btn-xs btn-del-answer" style="display: inline-block; float:right;">
+						        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+						    </button>
+							<label style="cursor: pointer;width:calc(100% - 30px)" for="correct_<%= answer.get('id') %>" class="checkbox">
+								<input type="checkbox" value="<%= answer.get('id') %>" name="correct[<%= question.get('id') %>]" id="correct_<%= answer.get('id') %>" <% if (answer.get('correct')) { %>checked="checked"<% } %> class="correct">
+								<input id="answer_<%= answer.get('id') %>" type="text" name="answer[<%= question.get('id') %>]" value="<%= answer.getContent().raw %>" class="form-control answer" />
+							</label>
+						</div>
+					</li>
+		            <% }); %>
+				</ul>
+			    <button class="btn btn-success btn-add-answer btn-xs" data-i18n="btn-add-answer" rel="<%= question.get('id') %>">
+			        Add one answer
+			    </button>
+		    </div>
+    	</div>
+	    <div class="col-sm-6 col-lg-6">
+	    	<br />
+	    	<pre id="preview_question-<%= question.get('id') %>" style="position: relative;border: 1px solid rgb(204, 204, 204); width: 100%; min-height: 6em; display: inline-block; padding: 2px; overflow-y: auto; word-wrap: break-word;" id="id_content-preview"><% if (model.getQuestion(index).get('figure')) { %><img src="<%= model.getQuestion(index).get('figure') %>" style="float:right; width: 40%" /><% } %><span style="position: absolute; right: 13px; bottom: 10px; color: #BBB;">Preview</span><span class="content"><%= model.getQuestion(index).getContentHTML() %></span></pre>
+	    	<ul class="list-group li_preview">
+	            <% _.each( question.getAnswers().models, function(answer){ %>
+	                <li id="li_preview_correct_<%= answer.get('id') %>" class="list-group-item <% if (answer.get('correct')) { %>list-group-item-success<% } %>"><div class="checkbox"><label class="radio" for="preview_answer_<%= answer.get('id') %>" id="preview_answer_<%= answer.get('id') %>"><%= answer.getContent().html %></label></div></li>
+				<% }); %>
+			</ul>
+	    </div>
+	</div>
+	<hr />
+	<% }); %>
+</div>
+
+<div class="form-group">
+
+    <button class="btn btn-success btn-add-question" data-i18n="btn-add-question">
+        Add one question
+    </button>
+
+    <button class="btn btn-primary btn-save" data-i18n="btn-save" style="float: right;">
+        Save
+    </button>
+
+    <button class="btn btn-default btn-cancel" data-i18n="btn-cancel" style="float: right;">
+        Cancel
+    </button>
+
+    <span class="error-msg"></span>
+</div>
+
+<div id="new-question" style="display:none;">
+	<div class="row" rel="MYNEWQUESTIONID">
+		<div class="col-sm-6 col-lg-6">
+		    <div class="form-group">
+			    <button class="btn btn-danger btn-del-question" style="display: inline-block; float:right;">
+			        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+			    </button>
+		    	<label>??.</label>
+				Enonc&eacute; de la question<br />
+				<textarea id="question-MYNEWQUESTIONID"
+				  name="question[MYNEWQUESTIONID]"
+		          class="form-control question"
+		          rows="3"
+		          maxlength="250"
+		          data-i18n="[placeholder]placeholder-add-question"
+		          placeholder="add question here"></textarea>
+		          <input name="figure[MYNEWQUESTIONID]" type="file"/>
+			</div>
+		    <div class="form-group">
+		    	R&eacute;ponses (cocher les bonnes r&eacute;ponses)<br />
+		    	<ul class="list-group">
+		            <li class="list-group-item" id="li_answer_MYNEWANSWERID" rel="MYNEWANSWERID>
+						<div class="checkbox">
+							<button rel="MYNEWANSWERID" class="btn btn-danger btn-xs btn-del-answer" style="display: inline-block; float:right;">
+						        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+						    </button>
+							<label style="cursor: pointer;width:calc(100% - 30px)" for="correct_MYNEWANSWERID" class="checkbox"">
+								<input type="checkbox" value="MYNEWANSWERID" name="correct[MYNEWQUESTIONID]" id="correct_MYNEWANSWERID" class="correct">
+								<input id="answer_MYNEWANSWERID" type="text" name="answer[MYNEWQUESTIONID]" value="" class="form-control answer" />
+							</label>
+						</div>
+					</li>
+				</ul>
+			    <button class="btn btn-success btn-add-answer btn-xs" data-i18n="btn-add-answer" rel="MYNEWQUESTIONID">
+			        Add one answer
+			    </button>
+		    </div>
+		</div>
+		<div class="col-sm-6 col-lg-6">
+			<br />
+			<pre id="preview_question-MYNEWQUESTIONID" style="position: relative;border: 1px solid rgb(204, 204, 204); width: 100%; min-height: 6em; display: inline-block; padding: 2px; overflow-y: auto; word-wrap: break-word;" id="id_content-preview"><span style="position: absolute; right: 13px; bottom: 10px; color: #BBB;">Preview</span><span class="content"></span></pre>
+			<ul class="list-group li_preview">
+   				<li id="li_preview_correct_MYNEWANSWERID" class="list-group-item"><div class="checkbox"><label class="radio" for="preview_answer_MYNEWANSWERID" id="preview_answer_MYNEWANSWERID"></label></div></li>
+			</ul>
+		</div>
+	</div>
+	<hr />
+</div>

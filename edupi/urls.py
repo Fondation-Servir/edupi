@@ -11,6 +11,8 @@ router.register(r'directories', views.DirectoryViewSet)
 router.register(r'documents', views.DocumentViewSet)
 router.register(r'links', views.LinkViewSet)
 router.register(r'quiz', views.QuizViewSet)
+router.register(r'question', views.QuestionViewSet)
+router.register(r'answer', views.AnswerViewSet)
 
 urlpatterns = patterns(
     '',

@@ -7,6 +7,7 @@ define([
     var LinkModel = BaseModel.extend({
 
         urlRoot: '/api/links/',
+        type: 'links',
 
         validate: function (attrs, options) {
             if (attrs.name.length <= 0) {

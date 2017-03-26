@@ -1,0 +1,32 @@
+<table class="table well">
+    <thead>
+    <tr>
+        <th>File Name</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    <% if (links.length > 0) { %>
+        <% _.each(links, function (d) { %>
+        <tr>
+            <td>
+                <a document-id="<%= d['id'] %>" href="<%= d['file'] %>" target="_blank">
+                    <%= d['name'] %>
+                </a>
+            </td>
+        </tr>
+        <% }); %>
+
+
+
+    <% } else { %>
+        <tr>
+            <td>no link found here</td>
+        </tr>
+    <% } %>
+
+    </tbody>
+</table>
+
+
