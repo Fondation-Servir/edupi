@@ -9,6 +9,17 @@
 </a>
 
 <% if (path) { %>
+<div class="pull-right" style="margin-left: 7px;">
+
+<a id="create-link"
+   class="btn btn-primary btn-create-link"
+   data-toggle="modal"
+   data-target="#modal-create"
+   data-i18n="action-btn-create-link"
+   type="button">
+    Create Link
+</a>
+
 <a id="btn-upload-to-directory" href="#directories/<%= path %>/upload"
    data-i18n="action-btn-upload-files"
    class="btn btn-primary btn-upload">Upload</a>

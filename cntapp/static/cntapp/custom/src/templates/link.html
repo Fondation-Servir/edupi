@@ -19,11 +19,8 @@
               data-i18n="[title]popupinfo-edit"
                 ></span>
 
-        <a href="<%= model.get('url') %>" target="_blank" style="text-decoration: none;" download>
-            <span  class="glyphicon glyphicon-globe custom-glyphicon"
-                   title="download"
-                   data-i18n="[title]popupinfo-download"
-                    ></span>
+        <a href="<%= model.get('url') %>" target="_blank" style="text-decoration: none;">
+            <span  class="glyphicon glyphicon-globe custom-glyphicon"></span>
         </a>
 
         <% if (! isSearchResult) { %>

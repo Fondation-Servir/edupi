@@ -3,6 +3,7 @@
 
   "action-btn-create-directory": "Create directory",
   "action-btn-upload-files": "Upload",
+  "action-btn-create-link": "Create a link",
   "action-btn-link-documents": "Link documents",
   "action-btn-link-directory": "Link directory",
   "action-btn-link-links": "Link a link",

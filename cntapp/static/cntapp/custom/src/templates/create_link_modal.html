@@ -1,0 +1,28 @@
+<!-- Modal -->
+<div class="modal" id="modal-create" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-vertical-center">
+        <div class="modal-content text-center">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalLabel"
+                    data-i18n="title-create-link">Create Link</h4>
+            </div>
+            <form id="link-create-form" action="" method="post">
+                <div class="modal-body">
+                    <input id="input-link-name" class="form-control" tabindex="0"
+                           pattern=".{1,60}"
+                           required title="1 to 60 characters"
+                           type="text" name="name" placeholder="name" data-i18n="[placeholder]placeholder-link-name" />
+					<br />
+                    <input id="input-link-url" class="form-control" tabindex="0"
+                           pattern=".{1,255}"
+                           required title="1 to 255 characters"
+                           type="url" name="url" placeholder="url" data-i18n="[placeholder]placeholder-link-url" />
+                </div>
+                <div class="modal-footer">
+                    <a id="cancel" class="btn btn-danger btn-cancel" role="button" data-dismiss="modal" data-i18n="btn-cancel">Cancel</a>
+                    <button id="btn-modal-create" type="submit" class="btn btn-primary .btn-modal-create" data-i18n="btn-create">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

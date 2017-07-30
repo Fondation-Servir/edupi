@@ -3,12 +3,14 @@ define([
     'views/link_documents_modal', 'views/link_directory_modal', 'views/link_links_modal', 'views/link_quiz_modal',
     'text!templates/action_bar.html',
     'text!templates/create_directory_modal.html',
-    'text!templates/confirm_modal.html'
+    'text!templates/confirm_modal.html',
+    'text!templates/create_link_modal.html',
 ], function (_, Backbone,
              LinkDocumentModalView, LinkDirectoryModalView, LinkLinksModalView, LinkQuizModalView,
-             actionBarTemplate, createDirectoryModalTemplate, confirmModalTemplate) {
+             actionBarTemplate, createDirectoryModalTemplate, confirmModalTemplate, createLinkModalTemplate) {
 
     var CREATE_DIRECTORY_MODAL_TEMPLATE = _.template(createDirectoryModalTemplate),
+        CREATE_LINK_MODAL_TEMPLATE = _.template(createLinkModalTemplate),
         CONFIRM_MODAL_TEMPLATE = _.template(confirmModalTemplate),
         ACTION_BAR_TEMPLATE = _.template(actionBarTemplate);
 
@@ -40,7 +42,19 @@ define([
                 console.debug('show create-directory-modal');
             },
 
-            'submit form': 'submit',
+            'click .btn-create-link': function () {
+                var that = this;
+                this.$('.modal-area').html(CREATE_LINK_MODAL_TEMPLATE());
+                this.$('.modal-area').i18n();
+                this.$('#modal-create').on('shown.bs.modal', function () {
+                    that.$('input[name="name"]').focus();
+                });
+                console.debug('show create-link-modal');
+            },
+
+            'submit form#directory-create-form': 'submit_directory',
+
+            'submit form#link-create-form': 'submit_link',
 
             'click .btn-link-documents': function () {
                 var modal = new LinkDocumentModalView({
@@ -83,7 +97,7 @@ define([
             }
         },
 
-        submit: function (event) {
+        submit_directory: function (event) {
             var data, url,
                 that = this;
 
@@ -101,6 +115,37 @@ define([
                 .fail(function (reason) {
                     console.error('fail to create directory, reason:' + reason);
                 });
+        },
+
+        submit_link: function (event) {
+				var data, url,
+                that = this;
+
+            event.preventDefault();
+            this.form = this.$(event.currentTarget);
+            data = this.serializeForm(this.form);
+
+            $.post('/api/links/', data)
+                .success(function (file, json) {
+                    console.error('create link, reason:' + file);
+                    console.error('create link, reason:' + json);
+
+					url = cntapp.apiRoots.directories + that.parentId + '/links/';
+					var data = {"links": file['id']};
+
+		            $.post(url, data)
+		                .success(function () {
+		                    that.$('.modal').modal('hide');
+		                    Backbone.history.loadUrl(Backbone.history.fragment);  // reload current url for refreshing page
+		                })
+		                .fail(function (reason) {
+		                    console.error('fail to create link, reason:' + reason);
+		             });
+                })
+                .fail(function (reason) {
+                    console.error('fail to create link, reason:' + reason);
+             });
+
         },
 
         serializeForm: function (form) {
