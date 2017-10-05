@@ -1,6 +1,6 @@
 server {
     listen 80;
-    server_name fondationorange.org;
+    server_name shammesh.org;
 
     root /home/pi/sites/www/;
     index index.html;
@@ -18,5 +18,5 @@ server {
 server {
     listen 80 default_server;
     server_name _;
-    return 301 http://fondationorange.org;
+    return 301 http://shammesh.org;
 }

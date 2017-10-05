@@ -24,7 +24,7 @@ __all__ = [
     'deploy_kiwix'
 ]
 
-PORTAL_SITE_NAME = 'fondationorange.org'
+PORTAL_SITE_NAME = 'shammesh.org'
 
 def install_deps():
     run('sudo apt-get update')
@@ -50,7 +50,7 @@ def config_hotspot():
     run('sudo reboot')
 
 
-def deploy_edupi(commit='origin/release', user='Orange-Foundation'):
+def deploy_edupi(commit='origin/release', user='Fondation-Servir'):
     manager = EdupiDeployManager()
     manager.deploy(commit, user.strip())
 
@@ -60,7 +60,7 @@ def uninstall_edupi(purge_data=False):
     manager.uninstall(purge_data)
 
 def deploy_education_et_numerique():
-    site_folder = '/home/%s/sites/education-et-numerique.fondationorange.org' % RASP_USER_NAME
+    site_folder = '/home/%s/sites/education-et-numerique.shammesh.org' % RASP_USER_NAME
 
     if not exists(site_folder) and not exists('/home/%s/sites/artefact-v2.0.0.tar.gz' % RASP_USER_NAME):
         if not os.path.isfile('/home/source/artefact-v2.0.0.tar.gz'):
@@ -74,12 +74,12 @@ def deploy_education_et_numerique():
         run('rm -Rf /home/%s/sites/artefact-v2.0.0.tar.gz' % RASP_USER_NAME)
 
     # Nginx conf
-    send_file('/etc/nginx/sites-enabled/education-et-numerique.fondationorange.org', mod='644')
+    send_file('/etc/nginx/sites-enabled/education-et-numerique.shammesh.org', mod='644')
 
     run('sudo service nginx restart')
 
 def deploy_aflatoun():
-    site_folder = '/home/%s/sites/aflatoun.fondationorange.org' % RASP_USER_NAME
+    site_folder = '/home/%s/sites/aflatoun.shammesh.org' % RASP_USER_NAME
 
     # Install dependencies
     run('sudo apt-get install -y unzip')
@@ -99,8 +99,8 @@ def deploy_aflatoun():
         run('rm -Rf /home/%s/sites/aflatoundist.zip' % RASP_USER_NAME)
 
     # Nginx conf
-    send_file('/etc/nginx/sites-enabled/aflatoun.fondationorange.org', mod='644')
-    send_file('/etc/nginx/sites-enabled/kalite.fondationorange.org', mod='644')
+    send_file('/etc/nginx/sites-enabled/aflatoun.shammesh.org', mod='644')
+    send_file('/etc/nginx/sites-enabled/kalite.shammesh.org', mod='644')
 
     run('sudo service nginx restart')
     run('sudo service aflatounkalite restart')
@@ -142,7 +142,7 @@ def deploy_kiwix():
 
     # Install service
     send_file('/etc/supervisor/conf.d/kiwix.conf', mod='644')
-    send_file('/etc/nginx/sites-enabled/kiwix.fondationorange.org', mod='644')
+    send_file('/etc/nginx/sites-enabled/kiwix.shammesh.org', mod='644')
     send_file('/etc/nginx/conf.d/edupi.conf', mod='644')
     run('sudo service supervisor restart')
     run('sudo service nginx restart')
@@ -156,7 +156,7 @@ def deploy_kalite():
     run('sudo dpkg -i /tmp/ka-lite-raspberry-pi*.deb')
 
 def deploy_wikifundi():
-    site_folder = '/home/%s/sites/wikifundi.fondationorange.org' % RASP_USER_NAME
+    site_folder = '/home/%s/sites/wikifundi.shammesh.org' % RASP_USER_NAME
     parsoid_folder = '/home/%s/sites/parsoid' % RASP_USER_NAME
     repo_url = 'http://download.kiwix.org/other/wikifundi/fr.africapack.kiwix.org_2016-08.tar.bz2'
     parsoid_url = 'http://download.kiwix.org/other/wikifundi/parsoid_2016-08.tar.bz2'
@@ -179,8 +179,8 @@ def deploy_wikifundi():
         run('rm -Rf /tmp/wikifundi.bz2')
 
     # Nginx conf
-    send_file('/etc/nginx/sites-enabled/wikifundi.fondationorange.org', mod='644')
-    run('grep -q "wikifundi.fondationorange.org" /etc/hosts || echo "127.0.0.1 wikifundi.fondationorange.org" | sudo tee -a /etc/hosts')
+    send_file('/etc/nginx/sites-enabled/wikifundi.shammesh.org', mod='644')
+    run('grep -q "wikifundi.shammesh.org" /etc/hosts || echo "127.0.0.1 wikifundi.shammesh.org" | sudo tee -a /etc/hosts')
 
     # Install parsoid
     if not exists(parsoid_folder):

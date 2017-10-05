@@ -1,20 +1,20 @@
 server {
     listen 80;
-    server_name edupi.fondationorange.org;
+    server_name edupi.shammesh.org;
 
     client_max_body_size 500M;
 
     location /static {
-        alias /home/pi/sites/edupi.fondationorange.org/static;
+        alias /home/pi/sites/edupi.shammesh.org/static;
     }
 
     location /media {
         access_log /var/log/nginx/edupi_media_access.log;
-        alias /home/pi/sites/edupi.fondationorange.org/media;
+        alias /home/pi/sites/edupi.shammesh.org/media;
     }
 
     location / {
-        proxy_pass http://unix:/tmp/edupi.fondationorange.org.socket;
+        proxy_pass http://unix:/tmp/edupi.shammesh.org.socket;
         proxy_read_timeout 300;
         proxy_set_header Host $host:$server_port;
     }

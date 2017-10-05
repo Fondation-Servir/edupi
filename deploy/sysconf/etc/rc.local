@@ -23,7 +23,7 @@ if [ "$_IP" ]; then
   printf "My IP address is %s\n" "$_IP"
 fi
 
-SSID_PREFIX="FONDATION_ORANGE"
+SSID_PREFIX="SHAMMESHBOX"
 
 echo "---hotspot config---"
 MY_HOSTID=$(cat /proc/cpuinfo | grep Serial | cut -d: -f2 | sed 's/^[ \t]*//;s/[ \t]*$//')

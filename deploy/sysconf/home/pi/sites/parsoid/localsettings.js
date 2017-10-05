@@ -20,8 +20,8 @@ exports.setup = function( parsoidConfig ) {
         // (overrides defaultAPIProxyURI), or null to disable proxying for
         // this end point.
 
-        parsoidConfig.setMwApi({ uri: 'http://wikifundi.fondationorange.org/w/api.php', domain: 'wikifundi.fondationorange.org', prefix: 'en_africapack' });
-        parsoidConfig.setMwApi({ uri: 'http://wikifundi.fondationorange.org/w/api.php', domain: 'wikifundi.fondationorange.org', prefix: 'fr_africapack' });
+        parsoidConfig.setMwApi({ uri: 'http://wikifundi.shammesh.org/w/api.php', domain: 'wikifundi.shammesh.org', prefix: 'en_africapack' });
+        parsoidConfig.setMwApi({ uri: 'http://wikifundi.shammesh.org/w/api.php', domain: 'wikifundi.shammesh.org', prefix: 'fr_africapack' });
 
         // A default proxy to connect to the API endpoints. Default: undefined
         // (no proxying). Overridden by per-wiki proxy config in setInterwiki.

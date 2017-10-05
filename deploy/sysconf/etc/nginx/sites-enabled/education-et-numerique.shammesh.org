@@ -1,8 +1,8 @@
 server {
     listen 80;
-    server_name education-et-numerique.fondationorange.org;
+    server_name education-et-numerique.shammesh.org;
 
-    root /home/pi/sites/education-et-numerique.fondationorange.org/;
+    root /home/pi/sites/education-et-numerique.shammesh.org/;
     index index.html;
 
     location ~*\.(sh|shell)$ {

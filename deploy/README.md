@@ -74,17 +74,17 @@ EduPi will run automatically after boot.
 **Test it**
 
 Connect a mobile device to the Pi's Hotspot,
-open a browser and enter the URL: http://edupi.fondationorange.org:8021 to enter into the index page.
+open a browser and enter the URL: http://edupi.shammesh.org:8021 to enter into the index page.
 
 If you want to test it with your local machine which not only share the same network with your raspberry but also
 has access to the outside Internet, you need to change your `hosts` file. On Linux, add the following line to `/etc/hosts`:
 
-    RASPBERRY_IP fondationorange.org edupi.fondationorange.org
+    RASPBERRY_IP shammesh.org edupi.shammesh.org
 
 You can then use your browser to test it:
 
-    Normal user   : http://edupi.fondationorange.org:8021/
-    Administrator : http://edupi.fondationorange.org:8021/custom/
+    Normal user   : http://edupi.shammesh.org:8021/
+    Administrator : http://edupi.shammesh.org:8021/custom/
 
 There is a default super user account created with this deployment script:
 

@@ -5,8 +5,8 @@ upstream php {
 server {
     listen      80;
 
-    server_name wikifundi.fondationorange.org;
-    root /home/pi/sites/wikifundi.fondationorange.org/;
+    server_name wikifundi.shammesh.org;
+    root /home/pi/sites/wikifundi.shammesh.org/;
 
     client_max_body_size 100m;
     client_body_timeout 600;

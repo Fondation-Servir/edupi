@@ -18,7 +18,7 @@ $wgDBserver      = "";
 $wgDBname        = "mw_fr_africapack";
 $wgDBuser        = "";
 $wgDBpassword    = "";
-$wgSQLiteDataDir = "/home/pi/sites/wikifundi.fondationorange.org/";
+$wgSQLiteDataDir = "/home/pi/sites/wikifundi.shammesh.org/";
 
 # Entropy
 $wgSecretKey = "d5eb60c72d9fa0946adcfb1cb55cd66c654a093df0a63946d32d645f38a5eb19";
@@ -84,8 +84,8 @@ require_once("$IP/extensions/VisualEditor/VisualEditor.php");
 $wgDefaultUserOptions['visualeditor-enable'] = 1;
 $wgVisualEditorNamespaces[] = NS_PROJECT;
 $wgVirtualRestConfig['modules']['parsoid'] = array(
-                                                   'url' => 'http://wikifundi.fondationorange.org:8002',
-                                                   'domain' => 'wikifundi.fondationorange.org',
+                                                   'url' => 'http://wikifundi.shammesh.org:8002',
+                                                   'domain' => 'wikifundi.shammesh.org',
                                                    'prefix' => 'fr_africapack',
                                                    'forwardCookies' => true
                                                    );

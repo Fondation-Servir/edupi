@@ -8,7 +8,7 @@ from .settings import RASP_USER_NAME, DEFAULT_PASSWORD
 
 SOURCE_DIR_NAME = 'edupi'
 
-EDUPI_SITE_NAME = 'edupi.fondationorange.org'
+EDUPI_SITE_NAME = 'edupi.shammesh.org'
 
 
 class EdupiDeployManager():
