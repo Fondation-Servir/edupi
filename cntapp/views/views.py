@@ -85,20 +85,28 @@ class LinkViewSet(viewsets.ModelViewSet):
         return super().list(request, *args, **kwargs)
 
 class QuizViewSet(viewsets.ModelViewSet):
-    """
-    This viewset list `links`, and provides `create`, `retrieve`,
-    `update` and `destroy` options
-    """
-    queryset = Quiz.objects.all()
-    serializer_class = QuizSerializer
+	"""
+	This viewset list `links`, and provides `create`, `retrieve`,
+	`update` and `destroy` options
+	"""
+	queryset = Quiz.objects.all()
+	serializer_class = QuizSerializer
 
-    @cache_response(key_func=CustomObjectKeyConstructor())
-    def retrieve(self, request, *args, **kwargs):
-        return super().retrieve(request, *args, **kwargs)
+	@cache_response(key_func=CustomObjectKeyConstructor())
+	def retrieve(self, request, *args, **kwargs):
+		return super().retrieve(request, *args, **kwargs)
 
-    @cache_response(key_func=CustomListKeyConstructor())
-    def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
+	@cache_response(key_func=CustomListKeyConstructor())
+	def list(self, request, *args, **kwargs):
+		return super().list(request, *args, **kwargs)
+
+	def update(self, request, *args, **kwargs):
+		try:
+			instance = self.get_object()
+			instance.del_questions()
+		except Http404:
+			pass
+		return super().update(request, *args, **kwargs)
 
 class QuestionViewSet(viewsets.ModelViewSet):
     """
@@ -276,7 +284,6 @@ class DirectoryViewSet(viewsets.ModelViewSet):
             return self.delete_quiz(request, *args, **kwargs)
         else:
             return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
 
     @staticmethod
     def _check_json_documents_in_request(request):

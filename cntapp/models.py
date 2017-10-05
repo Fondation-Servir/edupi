@@ -34,9 +34,9 @@ class Document(models.Model):
         (TYPE_OTHERS, 'others'),
     )
 
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=250)
     type = models.CharField(max_length=2, choices=TYPES, blank=True)
-    description = models.CharField(max_length=250, blank=True)
+    description = models.TextField(blank=True)
     file = models.FileField()
     thumbnail = ProcessedImageField(upload_to='thumbnails', blank=True, null=True,
                                     processors=[ResizeToFill(150, 150)],
@@ -78,6 +78,9 @@ class Quiz(models.Model):
 
 	def get_questions(self):
 	    return self.question_set.all().select_subclasses()
+
+	def del_questions(self):
+	    return self.question_set.all().delete()
 
 	@property
 	def get_max_score(self):

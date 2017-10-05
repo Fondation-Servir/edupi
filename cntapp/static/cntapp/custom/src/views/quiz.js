@@ -22,7 +22,7 @@ define([
     var CONFIRM_MODAL_TEMPLATE = _.template(confirmModalTemplate);
     var PATH_LIST_TEMPLATE = _.template(pathListTemplate);
 
-    var QuizView = Backbone.View.extend({
+    var QuizView= Backbone.View.extend({
         tagName: "li",
         className: "list-group-item",
 
@@ -30,7 +30,7 @@ define([
             options = options || {};
 
             this.isSearchResult = typeof options.isSearchResult === "boolean" ? options.isSearchResult : false;
-            this.model.on("change", this.render, this);
+            //this.model.on("change", this.render, this);
             this.model.on("destroy", this.destroy, this);
 
             this.model.on('invalid', function (model, error) {
@@ -167,7 +167,7 @@ define([
 			inputs.each(function() {
     			highest = Math.max(highest, parseFloat($(this).attr('rel') || $(this).val()));
 			});
-			if (highest == NaN)
+			if (highest == -Infinity)
 			{
 				return (1);
 			}
@@ -189,8 +189,8 @@ define([
             },
 
             'click .btn-del-answer': function(event) {
-            	$('#li_answer_' + $(event.target).attr('rel')).remove();
-            	$('#li_preview_correct_' + $(event.target).attr('rel')).remove();
+            	$('#li_answer_' + $(event.target).parent().attr('rel')).remove();
+            	$('#li_preview_correct_' + $(event.target).parent().attr('rel')).remove();
            	},
             'click .btn-del-question': function(event) {
             	$($(event.target).parents('.row')[0]).next().remove();
@@ -215,6 +215,7 @@ define([
             	var max_id = this.maxVal(this.$('#questions .correct'));
             	var html = this.$('#new-question').html();
           		html = html.replace(/MYNEWANSWERID/g, max_id);
+
           		var max_id = this.maxVal(this.$('#questions .row'));
           		html = html.replace(/MYNEWQUESTIONID/g, max_id);
             	$('#questions').append(html);
@@ -284,34 +285,67 @@ define([
         saveQuiz: function () {
             var name = this.$('input[name="name"]').val().trim();
             var description = this.$('textarea[name="description"]').val().trim();
+			timeout = null;
 
-            this.model.destroy();
-
-            this.model.save({
+			this.model.save({
                 "name": name,
                 "description": description
-            });
-            that = this;
+            }, {success : function(quiz) {
+            	that.model.questions.reset();
+	            $('#questions .row').each(function(index, obj) {
+	                var id = $(obj).attr('rel');
+	                q = new Question();
+	                q.set({
+	                    quiz : that.model.id,
+	                    content : $(obj).find('textarea.question').val(),
+	                    /*figure : $(obj).find('input[type="file"]').val(),*/
+	                    explanation : ""
+	                });
+	                q.save(null, { success: function (question, resp) {
+	                	$(obj).find('li').each(function(index2, obj2) {
+                			if ($(obj2).find('input.answer').length)
+                			{
+			                    var a = new Answer();
+			                    a.set({
+			                        question : question.id,
+			                        content : $(obj2).find('input.answer').val(),
+			                        correct : $(obj2).find('input.correct').is(':checked')
+			                    });
+			                    a.save();
 
-            this.$('#questions .row').each(function(index, obj) {
-                var id = $(obj).attr('rel');
-                q = new Question();
-                q.set({
-                    quiz : that.model.id,
-                    content : $(obj).find('textarea.question').val(),
-                    explanation : ""
-                });
-                q.save();
-                $(obj).find('li').each(function(index2, obj2) {
-                    var a = new Answer();
-                    a.set({
-                        question : q.id,
-                        content : $(obj2).find('input.answer').val(),
-                        correct : $('input.correct[value=' + $(obj2).attr('rel') + ']').is(':checked')
-                    });
-                    a.save();
-                });
-            });
+			                    clearTimeout(timeout);
+					            timeout = setTimeout(function(){
+					            	request = $.get('/api/quiz/' + that.model.id);
+					            	request.done(function (data) {
+							                that.model.set(data);
+							                that.model.loadData();
+							                that.render();
+						            });
+					            }, 500);
+		                    }
+		                });
+
+	                	clearTimeout(timeout);
+			            timeout = setTimeout(function(){
+			            	request = $.get('/api/quiz/' + that.model.id);
+			            	request.done(function (data) {
+					                that.model.set(data);
+					                that.model.loadData();
+					                that.render();
+				            });
+			            }, 500);
+	                }});
+	            });
+            }});
+	        clearTimeout(timeout);
+            timeout = setTimeout(function(){
+            	request = $.get('/api/quiz/' + that.model.id);
+            	request.done(function (data) {
+		                that.model.set(data);
+		                that.model.loadData();
+		                that.render();
+	            });
+            }, 500);
         }
     });
 
